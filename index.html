@@ -46,15 +46,41 @@
         </section>
         <section>
           <h2>History</h2>
+          <img src="history.jpg"/>
+          <img src="opengl.png"/>
+          <img src="opengles.png"/>
+          <img src="webgl.png"/>
         </section>
         <section>
           <h2>Pipeline</h2>
+          <img src="pipeline.gif"/>
         </section>
         <section>
           <h2>What goes into a WebGL</h2>
           <h2>Application?</h2>
           <img src="goesin.jpg">
           <p>All of these are optional except a single shader pair</p>
+        </section>
+        <section>
+          <h2>Assets</h2>
+          <p>
+            All assets need to be loaded.  There should be a proper seperation
+            of concerns.
+          </p>
+          <p class="fragment">Shaders are just strings.</p>
+          <p class="fragment">Buffers are just bytes (can be stored in JSON).</p>
+          <p class="fragment">Textures are just images/videos.</p>
+        </section>
+        <section>
+          <h2>Terminology</h2>
+        </section>
+        <section>
+          <h2>Shaders</h2>
+          <p>Small programs that run massively parallel on the GPU.</p>
+          <p class="fragment">Shaders come in pairs.</p>
+          <p class="fragment">There is always a vertex and a fragment shader.</p>
+          <p class="fragment">A vertex shader can feed a fragment shader.</p>
+          <p class="fragment">Shaders can be mixed and matched if the have the same output to input.</p>
         </section>
       </div>
     </div>
