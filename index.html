@@ -128,6 +128,23 @@
         <section>
           <img src="3dcoords.png"/>
         </section>
+        <section>
+          <h2>The Canvas</h2>
+          <pre><code>
+            <canvas id="my_canvas" width="400" height="400">
+              Oops, your browser doesn't support html5 canvas!
+            </canvas>
+          </code></pre>
+        </section>
+        <section>
+          <h2>Getting a WebGL Context</h2>
+          <pre><code>
+            var canvas = document.getElementById('my_canvas');
+            var gl = canvas.getContext('webgl') ||
+                     canvas.getContext('experimental-webgl');
+            if (!gl) throw new Error("browser may not support webgl");
+          </code></pre>
+        </section>
       </div>
     </div>
     <script src="lib/js/head.min.js"></script>
