@@ -138,11 +138,56 @@
         </section>
         <section>
           <h2>Getting a WebGL Context</h2>
-          <pre><code>
+          <pre><code class="language-javascript">
             var canvas = document.getElementById('my_canvas');
             var gl = canvas.getContext('webgl') ||
                      canvas.getContext('experimental-webgl');
             if (!gl) throw new Error("browser may not support webgl");
+          </code></pre>
+        </section>
+        <section>
+          <h2>Clearing the Canvas</h2>
+          <pre><code class="language-javascript">
+            gl.clearColor(0.0, 0.0, 0.0, 1.0);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+          </code></pre>
+        </section>
+        <section>
+          <h2>Compile Shaders</h2>
+          <pre><code class="language-javascript">
+            function compile (gl, type, shaderSrc) {
+              var shader = gl.createShader(type);
+              gl.shaderSource(shader, shaderSrc);
+              gl.compileShader(shader);
+
+              if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+                throw new Error(gl.getShaderInfoLog(shader));
+              }
+
+              return shader;
+            };
+            var vertexShader = compile(gl, gl.VERTEX_SHADER,
+                                        vertexShaderSrc);
+            var fragmentShader = compile(gl, gl.FRAGMENT_SHADER,
+                                         fragmentShaderSrc);
+          </code></pre>
+        </section>
+        <section>
+          <h2>Link Shaders</h2>
+          <pre><code class="language-javascript">
+            function link (gl, vertexShader, fragmentShader) {
+              var program = gl.createProgram();
+              gl.attachShader(program, vertexShader);
+              gl.attachShader(program, fragmentShader);
+              gl.linkProgram(program);
+
+              if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+                throw new Error(gl.getProgramInfoLog(program));
+              }
+
+              return program;
+            };
+            var program = link(gl, vertexShader, fragmentShader);
           </code></pre>
         </section>
       </div>
