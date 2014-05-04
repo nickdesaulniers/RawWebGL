@@ -1,0 +1,3 @@
+[submodule "examples/webgl-shader-loader"]
+	path = examples/webgl-shader-loader
+	url = git@github.com:nickdesaulniers/webgl-shader-loader.git

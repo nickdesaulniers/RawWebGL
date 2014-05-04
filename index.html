@@ -246,7 +246,7 @@ var uFragColor = gl.getUniformLocation(program, "uFragColor");
             <h2>Setting Uniforms and</h2>
             <h2>Attributes Directly</h2>
             <pre><code class="language-javascript">
-gl.vertexAttrib4f(aPosition, 0.0, 0.0, 0.0, 1.0);
+gl.vertexAttrib2f(aPosition, 0.0, 0.0);
 gl.uniform4f(uFragColor, 1.0, 0.0, 0.0, 1.0);
             </code></pre>
           </section>
@@ -256,7 +256,16 @@ gl.uniform4f(uFragColor, 1.0, 0.0, 0.0, 1.0);
 // takes a mode, first, count
 gl.drawArrays(gl.POINTS, 0, 1);
             </code></pre>
-            <a href="point.html" target="_blank">Example</a>
+            <a href="examples/point.html" target="_blank">Example</a>
+          </section>
+          <section>
+            <h2>Seperation of Concerns</h2>
+            <p>Move shaders from HTML or JS into their own files, load with XHR.</p>
+          </section>
+          <section>
+            <h2>Modularize and Reuse</h2>
+            <p>Move compile and link helper functions into reusable file.</p>
+            <a href="examples/point_clean.html" target="_blank">Example</a>
           </section>
         </section>
       </div>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <canvas id="myCanvas" width="400" height="400"></canvas>
+    <script src="webgl-shader-loader/webGLShaderLoader.js"></script>
+    <script>
+      var loader = new WebGLShaderLoader(document.getElementById('myCanvas'))
+      loader.loadFromXHR('point.vert', 'point.frag', function (errors, program, gl) {
+        if (errors.length > 1) return console.error.apply(console, errors);
+
+        gl.useProgram(program);
+        gl.clearColor(0.0, 0.0, 0.0, 1.0);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+
+        var aPosition = gl.getAttribLocation(program, "aPosition");
+        var uFragColor = gl.getUniformLocation(program, "uFragColor");
+
+        gl.vertexAttrib2f(aPosition, 0.0, 0.0);
+        gl.uniform4f(uFragColor, 1.0, 0.0, 0.0, 1.0);
+
+        gl.drawArrays(gl.POINTS, 0, 1);
+      });
+    </script>
+  </body>
+</html>
