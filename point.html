@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <canvas id="myCanvas" width="400" height="400"></canvas>
+    <script>
+      // last time I'm writing this without helper functions
+      var canvas = document.getElementById('myCanvas');
+      var gl = canvas.getContext('webgl') ||
+               canvas.getContext('experimental-webgl');
+      if (!gl) throw new Error('no webgl');
+
+      gl.clearColor(0.0, 0.0, 0.0, 1.0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+
+      var vertexShaderSrc = "      \
+        attribute vec4 aPosition;  \
+        void main () {             \
+          gl_Position = aPosition; \
+          gl_PointSize = 10.0;     \
+        }                          \
+      ";
+
+      var fragmentShaderSrc = "      \
+        precision mediump float;     \
+        uniform vec4 uFragColor;     \
+        void main () {               \
+          gl_FragColor = uFragColor; \
+        }                            \
+      ";
+
+      function compile (gl, type, shaderSrc) {
+        var shader = gl.createShader(type);
+        gl.shaderSource(shader, shaderSrc);
+        gl.compileShader(shader);
+
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+          throw new Error(gl.getShaderInfoLog(shader));
+        }
+
+        return shader;
+      };
+
+      function link (gl, vertexShader, fragmentShader) {
+        var program = gl.createProgram();
+        gl.attachShader(program, vertexShader);
+        gl.attachShader(program, fragmentShader);
+        gl.linkProgram(program);
+
+        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+          throw new Error(gl.getProgramInfoLog(program));
+        }
+
+        return program;
+      };
+
+      var program = link(gl, compile(gl, gl.VERTEX_SHADER, vertexShaderSrc),
+                             compile(gl, gl.FRAGMENT_SHADER, fragmentShaderSrc));
+      gl.useProgram(program);
+
+      var aPosition = gl.getAttribLocation(program, "aPosition");
+      var uFragColor = gl.getUniformLocation(program, "uFragColor");
+
+      gl.vertexAttrib4f(aPosition, 0.0, 0.0, 0.0, 1.0);
+      gl.uniform4f(uFragColor, 1.0, 0.0, 0.0, 1.0);
+
+      gl.drawArrays(gl.POINTS, 0, 1);
+    </script>
+  </body>
+</html>
