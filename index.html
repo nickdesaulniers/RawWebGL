@@ -263,11 +263,32 @@ gl.drawArrays(gl.POINTS, 0, 1);
             <p>Move shaders from HTML or JS into their own files, load with XHR.</p>
           </section>
           <section>
+            <h2>Reflection</h2>
+            <p>
+              We can use reflection of a gl program to get references to its
+              attributes and uniforms.
+            </p>
+            <pre><code class="language-javascript">
+var numAttributes = gl.getProgramParameter(program, gl.ACTIVE_ATTRIBUTES);
+for (var i = 0; i < numAttributes; ++i) {
+  gl.getAttribLocation(program, gl.getActiveAttrib(program, i).name);
+}
+
+var numUniforms = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
+for (i = 0; i < numUniformsl; ++i) {
+  gl.getUniformLocation(program, gl.getActiveUniform(program, i).name);
+}
+            </code></pre>
+          </section>
+          <section>
             <h2>Modularize and Reuse</h2>
-            <p>Move compile and link helper functions into reusable file.</p>
+            <p>
+              Move compile, link, reflection, and other  helper functions into
+              reusable file.
+            </p>
             <a href="examples/point_clean.html" target="_blank">Example</a>
           </section>
-        </section>
+       </section>
       </div>
     </div>
     <script src="lib/js/head.min.js"></script>
