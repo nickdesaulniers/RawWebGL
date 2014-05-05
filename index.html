@@ -37,7 +37,7 @@
         </section>
         <section>
           <h3>There's more to JS than jQuery</h3>
-          <h3>There's more to 3D than Three.js</h3>
+          <h3>There's more to WebGL than Three.js</h3>
         </section>
         <section>
           <h2>Warning</h2>
@@ -56,7 +56,7 @@
           </p>
           <ul>
             <li>Geometry</li>
-            <li>Triganometry</li>
+            <li>Trigonometry</li>
             <li>Linear Algebra</li>
           </ul>
         </section>
@@ -216,6 +216,14 @@ void main () {
           </code></pre>
         </section>
         <section>
+          <h2>Attributes and Uniforms</h2>
+          <p class="fragment">Uniforms and Attributes are inputs to shaders.</p>
+          <p class="fragment">Uniforms are the same (uniform) for all vertices.</p>
+          <p class="fragment">Attributes are unique per vertex.</p>
+          <p class="fragment">Attributes are only inputs to vertex shaders.</p>
+          <p class="fragment">Vertex shaders can output to fragment shaders via varyings.</p>
+        </section>
+        <section>
           <h2>Compile Shaders</h2>
           <pre><code class="language-javascript">
 function compile (gl, type, shaderSrc) {
@@ -286,7 +294,8 @@ gl.drawArrays(gl.POINTS, 0, 1);
             <h2>Reflection</h2>
             <p>
               We can use reflection of a gl program to get references to its
-              attributes and uniforms.
+              attributes and uniforms. This step is not strictly necessary, but
+              can help you get references when shaders have many inputs.
             </p>
             <pre><code class="language-javascript">
 var numAttributes = gl.getProgramParameter(program, gl.ACTIVE_ATTRIBUTES);
