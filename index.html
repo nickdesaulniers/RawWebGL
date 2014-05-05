@@ -317,6 +317,59 @@ for (i = 0; i < numUniformsl; ++i) {
             </p>
             <a href="examples/point_clean.html" target="_blank">Example</a>
           </section>
+          <section>
+            <h2>Drawing Points</h2>
+            <p>First, we need to beef up our shaders.</p>
+            <pre><code>
+attribute vec4 aPosition;
+attribute float aPointSize;
+attribute vec4 aColor;
+varying vec4 vColor;
+
+void main () {
+  gl_Position = aPosition;
+  gl_PointSize = aPointSize;
+  vColor = aColor;
+}
+            </code></pre>
+            <pre><code>
+precision mediump float;
+varying vec4 vColor;
+
+void main () {
+  gl_FragColor = vColor;
+}
+            </code></pre>
+          </section>
+          <section>
+            <h2>Multiple Draw Calls</h2>
+            <p>
+              As a naive first attempt, let's draw each point with its own draw
+              call.
+            </p>
+            <pre><code class="language-javascript">
+var p = [
+  { x:  0.0, y:  0.5, sz: 10.0, r: 1.0, g: 0.0, b: 0.0 },
+  { x: -0.5, y: -0.5, sz: 20.0, r: 0.0, g: 1.0, b: 0.0 },
+  { x:  0.5, y: -0.5, sz: 30.0, r: 0.0, g: 0.0, b: 1.0 }
+];
+for (var i = 0; i < p.length; ++i) {
+  gl.vertexAttrib4f(attributes.aPosition, p[i].x, p[i].y, 0.0, 1.0);
+  gl.vertexAttrib1f(attributes.aPointSize, p[i].sz);
+  gl.vertexAttrib4f(attributes.aColor, p[i].r, p[i].g, p[i].b, 1.0);
+  gl.drawArrays(gl.POINTS, 0, 1);
+}
+            </code></pre>
+            <a href="examples/points_multiple_draw.html" target="_blank">
+              Example
+            </a>
+          </section>
+          <section>
+            <h2>Multiple Draw Calls</h2>
+            <p>Multiple draw calls sometimes are needed to build up a scene.</p>
+            <p class="fragment">Draw calls can be the most expensive call.</p>
+            <p class="fragment">Try to minimize draw calls.</p>
+          </section>
        </section>
       </div>
     </div>
