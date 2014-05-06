@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+  </head>
+  <body>
+    <canvas id="myCanvas" width="400" height="400"></canvas>
+    <script src="webgl-shader-loader/webGLShaderLoader.js"></script>
+    <script src="webgl-shader-loader/webGLUtils.js"></script>
+    <script>
+      var loader = new WebGLShaderLoader(document.getElementById('myCanvas'));
+      loader.loadFromXHR('points.vert', 'points.frag', function (errors, program, gl) {
+        if (errors.length > 1) return console.error.apply(console, errors);
+
+        gl.useProgram(program);
+        gl.clearColor(0.0, 0.0, 0.0, 1.0);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+
+        var attributes = getAttributes(gl, program);
+        var n = initBuffers(gl, attributes);
+
+        gl.drawArrays(gl.POINTS, 0, n);
+      });
+
+      function initBuffers (gl, attributes) {
+        var data = new Float32Array([
+          // x,    y, ptSz,   r,   g,   b
+           0.0,  0.5, 10.0, 1.0, 0.0, 0.0,
+          -0.5, -0.5, 20.0, 0.0, 1.0, 0.0,
+           0.5, -0.5, 30.0, 0.0, 0.0, 1.0
+        ]);
+        var bytes = data.BYTES_PER_ELEMENT;
+        var buffer = gl.createBuffer();
+        if (!buffer) return console.error("unable to create buffer");
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+        gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
+
+        gl.vertexAttribPointer(attributes.aPosition, 2, gl.FLOAT, false, 6 * bytes, 0);
+        gl.enableVertexAttribArray(attributes.aPosition);
+
+        gl.vertexAttribPointer(attributes.aPointSize, 1, gl.FLOAT, false, 6 * bytes, 2 * bytes);
+        gl.enableVertexAttribArray(attributes.aPointSize);
+
+        gl.vertexAttribPointer(attributes.aColor, 3, gl.FLOAT, false, 6 * bytes, 3 * bytes);
+        gl.enableVertexAttribArray(attributes.aColor);
+
+        return 3;
+      };
+    </script>
+  </body>
+</html>
+

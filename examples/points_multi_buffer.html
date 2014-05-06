@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+  </head>
+  <body>
+    <canvas id="myCanvas" width="400" height="400"></canvas>
+    <script src="webgl-shader-loader/webGLShaderLoader.js"></script>
+    <script src="webgl-shader-loader/webGLUtils.js"></script>
+    <script>
+      var loader = new WebGLShaderLoader(document.getElementById('myCanvas'));
+      loader.loadFromXHR('points.vert', 'points.frag', function (errors, program, gl) {
+        if (errors.length > 1) return console.error.apply(console, errors);
+
+        gl.useProgram(program);
+        gl.clearColor(0.0, 0.0, 0.0, 1.0);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+
+        var attributes = getAttributes(gl, program);
+        var n = initBuffers(gl, attributes);
+
+        gl.drawArrays(gl.POINTS, 0, n);
+      });
+
+      // Where num is the number of elements per vertex.
+      // so if data.length = 6 and gl.drawArrays(_, _, 3) then we are drawing
+      // 3 vertices with 6 / 3 = 2 elements of data passed to each vertex.
+      function initBuffer (gl, data, num, attribute) {
+        var buffer = gl.createBuffer();
+        console.log(attribute);
+        if (!buffer) return !!console.error("Failed to create " + attribute + " buffer.");
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+        gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
+        gl.vertexAttribPointer(attribute, num, gl.FLOAT, false, 0, 0);
+        return !!gl.enableVertexAttribArray(attribute);
+      };
+
+      function initBuffers (gl, attributes) {
+        var positions = new Float32Array([
+          // x,    y
+           0.0,  0.5,
+          -0.5, -0.5,
+           0.5, -0.5
+        ]);
+        var ptSz = new Float32Array([
+          10.0,
+          20.0,
+          30.0
+        ]);
+        var colors = new Float32Array([
+          //r,   g,   b
+          1.0, 0.0, 0.0,
+          0.0, 1.0, 0.0,
+          0.0, 0.0, 1.0
+        ]);
+
+        initBuffer(gl, positions, 2, attributes.aPosition);
+        initBuffer(gl, ptSz, 1, attributes.aPointSize);
+        initBuffer(gl, colors, 3, attributes.aColor);
+
+        return 3;
+      };
+    </script>
+  </body>
+</html>
+
