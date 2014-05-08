@@ -1,3 +1,6 @@
 [submodule "examples/webgl-shader-loader"]
 	path = examples/webgl-shader-loader
 	url = git@github.com:nickdesaulniers/webgl-shader-loader.git
+[submodule "examples/gl-matrix"]
+	path = examples/gl-matrix
+	url = https://github.com/toji/gl-matrix.git
