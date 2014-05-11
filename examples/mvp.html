@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+  </head>
+  <body>
+    <canvas id="myCanvas" width="400" height="400"></canvas>
+    <script src="webgl-shader-loader/webGLShaderLoader.js"></script>
+    <script src="webgl-shader-loader/webGLUtils.js"></script>
+    <script src="gl-matrix/dist/gl-matrix.js"></script>
+    <script>
+      var canvas = document.getElementById('myCanvas');
+      var loader = new WebGLShaderLoader(canvas);
+      loader.loadFromXHR('mvp.vert', 'points.frag', function (errors, program, gl) {
+        if (errors.length > 1) return console.error.apply(console, errors);
+
+        gl.useProgram(program);
+        gl.clearColor(0.0, 0.0, 0.0, 1.0);
+        // try removing the depth test
+        gl.enable(gl.DEPTH_TEST);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+        var attributes = getAttributes(gl, program);
+        var uniforms = getUniforms(gl, program);
+        var n = initBuffers(gl, attributes);
+
+        // local coords -> world space
+        var modelMatrix = mat4.create();
+        mat4.rotateZ(modelMatrix, modelMatrix, 45 * Math.PI / 180);
+        gl.uniformMatrix4fv(uniforms.uModelMatrix, false, modelMatrix);
+
+        // world space -> camera space
+        var eye = vec3.fromValues(0, 2, 5);
+        var lookAt = vec3.fromValues(0, 0, 0);
+        var up = vec3.fromValues(0, 1, 0);
+        var viewMatrix = mat4.create();
+        mat4.lookAt(viewMatrix, eye, lookAt, up);
+        gl.uniformMatrix4fv(uniforms.uViewMatrix, false, viewMatrix);
+
+        // camera space -> screen
+        var projMatrix = mat4.create();
+        mat4.perspective(projMatrix, 30 * Math.PI / 180,
+                         canvas.width / canvas.height, 1, 10);
+        gl.uniformMatrix4fv(uniforms.uProjMatrix, false, projMatrix);
+
+        gl.drawArrays(gl.TRIANGLES, 0, n);
+      });
+
+      function initBuffers (gl, attributes) {
+        var positions = new Float32Array([
+          // x,    y,   z
+           0.0,  0.5,  0.5,
+          -0.5, -0.5,  0.5,
+           0.5, -0.5,  0.5,
+
+           0.0,  0.5, -0.5,
+          -0.5, -0.5, -0.5,
+           0.5, -0.5, -0.5
+        ]);
+        var colors = new Float32Array([
+          //r,   g,   b
+          1.0, 0.0, 0.0,
+          1.0, 1.0, 0.0,
+          1.0, 0.0, 1.0,
+
+          1.0, 1.0, 0.0,
+          0.0, 1.0, 0.0,
+          0.0, 1.0, 1.0
+        ]);
+
+        //                        3 data points per vertex
+        initBuffer(gl, positions, 3, attributes.aPosition);
+        initBuffer(gl, colors, 3, attributes.aColor);
+
+        return 6; // 6 vertices to be drawn
+      };
+    </script>
+  </body>
+</html>
+
