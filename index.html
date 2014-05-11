@@ -84,7 +84,7 @@
             of concerns.
           </p>
           <p class="fragment">Shaders are just strings.</p>
-          <p class="fragment">Buffers are just bytes (can be stored in JSON).</p>
+          <p class="fragment">Buffers are just bytes (can be stored in JSON, or other industry standards).</p>
           <p class="fragment">Textures are just images/videos.</p>
         </section>
         <section>
@@ -103,7 +103,7 @@
         <section>
           <h2>Mesh</h2>
           <img src="mesh.png"/><br/>
-          <p><i>A polygon mesh is a collection of vertices, edges and faces that defines the shape of a polyhedral object in 3D computer graphics and solid modeling.  AKA Model.</i></p>
+          <p><i>A polygon mesh is a collection of vertices, edges and faces that defines the shape of a polyhedral object in 3D computer graphics and solid modeling.  AKA Geometric Model.</i></p>
         </section>
         <section>
           <h2>Triangles</h2>
@@ -181,17 +181,16 @@
           <h2>Shading</h2>
         </section>
         <section>
-          <h2>Shaders</h2>
-          <p>Small programs that run massively parallel on the GPU.</p>
-          <p class="fragment">Shaders come in pairs (for now).</p>
-          <p class="fragment">There is always a vertex and a fragment shader.</p>
-          <p class="fragment">A vertex shader can feed a fragment shader.</p>
-          <p class="fragment">Shaders can be mixed and matched if the have the same output to input.</p>
+          <h2>Material</h2>
         </section>
         <section>
-          <h2>What I think of shaders</h2>
-          <img src="choose.png"/>
-          <p>Mix and Match</p>
+          <h2>Shaders</h2>
+          <p>Small programs that run massively parallel on the GPU.</p>
+          <p class="fragment">Shaders come in pairs (for now) of vertex and fragment.</p>
+          <p class="fragment">A vertex shader can feed a fragment shader.</p>
+          <p class="fragment">Shaders can be mixed and matched if the have the same output to input.</p>
+          <p class="fragment">Vertex shaders are run for each vertex.</p>
+          <p class="fragment">Fragment shaders are run for each fragment, with color values being interpolated inbetween.</p>
         </section>
         <section>
           <img src="2dcoords.png"/>
@@ -213,7 +212,7 @@
 var canvas = document.getElementById('my_canvas');
 var gl = canvas.getContext('webgl') ||
          canvas.getContext('experimental-webgl');
-if (!gl) throw new Error("browser may not support webgl");
+if (!gl) throw new Error('browser may not support webgl');
           </code></pre>
         </section>
         <section>
@@ -250,6 +249,7 @@ void main () {
   gl_FragColor = uFragColor;
 }
           </code></pre>
+          <p>Written in GLSL</p>
         </section>
         <section>
           <h2>Attributes and Uniforms</h2>
@@ -297,13 +297,14 @@ function link (gl, vertexShader, fragmentShader) {
 var program = link(gl, vertexShader, fragmentShader);
 gl.useProgram(program);
           </code></pre>
+          <p>A 3D application may use more than one gl program.</p>
           </section>
           <section>
             <h2>Getting References to</h2>
             <h2>Uniforms and Attributes</h2>
             <pre><code class="language-javascript">
-var aPosition = gl.getAttribLocation(program, "aPosition");
-var uFragColor = gl.getUniformLocation(program, "uFragColor");
+var aPosition = gl.getAttribLocation(program, 'aPosition');
+var uFragColor = gl.getUniformLocation(program, 'uFragColor');
             </code></pre>
           </section>
           <section>
@@ -325,6 +326,8 @@ gl.drawArrays(gl.POINTS, 0, 1);
           <section>
             <h2>Seperation of Concerns</h2>
             <p>Move shaders from HTML or JS into their own files, load with XHR.</p>
+            <p class="fragment">Though, we can do cool tricks by procedurally generating
+            strings of shaders at runtime.</p>
           </section>
           <section>
             <h2>Reflection</h2>
@@ -414,7 +417,7 @@ for (var i = 0; i < p.length; ++i) {
             <pre><code class="language-javascript">
 function initBuffer (gl, data, elemPerVertex, attribute) {
   var buffer = gl.createBuffer();
-  if (!buffer) throw new Error("Failed to create buffer.");
+  if (!buffer) throw new Error('Failed to create buffer.');
   gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
   gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
   gl.vertexAttribPointer(attribute, elemPerVertex, gl.FLOAT, false, 0, 0);
@@ -441,7 +444,7 @@ initBuffer(gl, colors, 3, attributes.aColor);
           </section>
           <section>
             <h2>Interleaved Buffer</h2>
-            <pre><code>
+            <pre><code class="language-javascript">
 var data = new Float32Array([
    0.0,  0.5,   10.0,   1.0, 0.0, 0.0,
   -0.5, -0.5,   20.0,   0.0, 1.0, 0.0,
@@ -449,7 +452,7 @@ var data = new Float32Array([
 ]);
 var bpe = data.BYTES_PER_ELEMENT;
 var buffer = gl.createBuffer();
-if (!buffer) throw new Error("Failed to create buffer.");
+if (!buffer) throw new Error('Failed to create buffer.');
 gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
 gl.vertexAttribPointer(attributes.aPosition, 2, gl.FLOAT, false, 6 * bpe, 0);
