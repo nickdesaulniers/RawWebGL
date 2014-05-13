@@ -482,9 +482,25 @@ gl.enableVertexAttribPointer(attributes.aColor);
           </section>
           <section>
             <h2>Drawing Modes</h2>
+            <p>gl.drawArrays(mode, start, numVertices) can take:</p>
+            <ul>
+              <li>gl.POINTS</li>
+              <li>gl.LINES</li>
+              <li>gl.LINE_STRIP</li>
+              <li>gl.LINE_LOOP</li>
+              <li>gl.TRIANGLES</li>
+              <li>gl.TRIANGLE_STRIP</li>
+              <li>gl.TRIAGLE_FAN</li>
+            </ul><br/>
+            <a href="examples/draw_modes.html" target="_blank">Example</a>
           </section>
           <section>
             <h2>Perspective</h2>
+            <p>In order to properly draw a 3D scene in perspective we need 3 things:</p>
+            <p class="fragment">Matrix of our model's transformations relative to its original coords. (Model Matrix)</p>
+            <p class="fragment">Matrix of where we are relative to model, where we are looking, and the up direction. (View Matrix)</p>
+            <p class="fragment">Matrix decribing viewing angle, aspect ratio, and near and far clipping plane of our viewing frustum. (Projection Matrix)</p>
+            <a href="examples/mvp.html" target="_blank" class="fragment">Examples</a>
           </section>
           <section>
             <h2>Animation</h2>

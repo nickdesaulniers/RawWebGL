@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+  </head>
+  <body>
+    <canvas id="myCanvas" width="400" height="400"></canvas>
+    <script src="webgl-shader-loader/webGLShaderLoader.js"></script>
+    <script src="webgl-shader-loader/webGLUtils.js"></script>
+    <script>
+      var loader = new WebGLShaderLoader(document.getElementById('myCanvas'));
+      loader.loadFromXHR('point.vert', 'point.frag', function (errors, program, gl) {
+        if (errors.length > 1) return console.error.apply(console, errors);
+
+        gl.useProgram(program);
+        gl.clearColor(0.0, 0.0, 0.0, 1.0);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+
+        var attributes = getAttributes(gl, program);
+        gl.uniform4f(getUniforms(gl, program).uFragColor, 1, 1, 0, 1);
+
+        var modes = [gl.POINTS, gl.LINES, gl.LINE_STRIP, gl.LINE_LOOP,
+                     gl.TRIANGLES, gl.TRIANGLE_STRIP, gl.TRIANGLE_FAN];
+
+        for (var i = 0; i < points.length; ++i) {
+          initBuffer(gl, points[i], 2, attributes.aPosition);
+          gl.drawArrays(modes[i], 0, 6);
+        }
+      });
+      // Surely there's a better way to repeat similar buffers...Math?
+      var points = [
+        new Float32Array([
+          -0.625, 0.625,
+          -0.350, 0.875,
+          -0.125, 0.625,
+           0.125, 0.875,
+           0.350, 0.625,
+           0.625, 0.875
+        ]),
+        new Float32Array([
+          -0.625, 0.375,
+          -0.350, 0.625,
+          -0.125, 0.375,
+           0.125, 0.625,
+           0.350, 0.375,
+           0.625, 0.625
+        ]),
+        new Float32Array([
+          -0.625, 0.125,
+          -0.350, 0.375,
+          -0.125, 0.125,
+           0.125, 0.375,
+           0.350, 0.125,
+           0.625, 0.375
+        ]),
+        new Float32Array([
+          -0.625, -0.125,
+          -0.350,  0.125,
+          -0.125, -0.125,
+           0.125,  0.125,
+           0.350, -0.125,
+           0.625,  0.125
+        ]),
+        new Float32Array([
+          -0.625, -0.375,
+          -0.350, -0.125,
+          -0.125, -0.375,
+           0.125, -0.125,
+           0.350, -0.375,
+           0.625, -0.125
+           ]),
+        new Float32Array([
+          -0.625, -0.625,
+          -0.350, -0.375,
+          -0.125, -0.625,
+           0.125, -0.375,
+           0.350, -0.625,
+           0.625, -0.375
+        ]),
+        new Float32Array([
+          -0.625, -0.875,
+          -0.350, -0.625,
+          -0.125, -0.875,
+           0.125, -0.625,
+           0.350, -0.875,
+           0.625, -0.625
+        ])
+      ];
+    </script>
+  </body>
+</html>
+
