@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
   </head>
   <body>
-    <video src="vid.webm" loop autoplay>Looks like you don't support webm.</video>
+    <video src="vid.webm" loop>Looks like you don't support webm.</video>
     <canvas id="myCanvas" width="400" height="400"></canvas>
     <script src="webgl-shader-loader/webGLShaderLoader.js"></script>
     <script src="webgl-shader-loader/webGLUtils.js"></script>
@@ -12,7 +12,7 @@
     <script>
       var canvas = document.getElementById('myCanvas');
       var loader = new WebGLShaderLoader(canvas);
-      loader.loadFromXHR('mvp.vert', 'points.frag', function (errors, program, gl) {
+      loader.loadFromXHR('texture.vert', 'texture.frag', function (errors, program, gl) {
         if (errors.length > 1) return console.error.apply(console, errors);
 
         gl.useProgram(program);
@@ -21,54 +21,78 @@
 
         var attributes = getAttributes(gl, program);
         var uniforms = getUniforms(gl, program);
-        var n = initBuffers(gl, attributes);
+        var n = initBuffers(gl, attributes, uniforms);
 
+        requestAnimationFrame(createAnimate(gl, uniforms, n));
+      });
+
+      function initTexture (gl, uSampler) {
+        var vid = document.querySelector('video');
+        if (vid.paused) {
+          vid.play();
+          console.log("playing");
+        }
+        var texture = gl.createTexture();
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, vid);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.uniform1i(uSampler, 0);
+      };
+
+      function createAnimate (gl, uniforms, n) {
+        var modelMatrix = mat4.create();
+        return function animate () {
+          // update
+          //mat4.rotateY(modelMatrix, modelMatrix, Math.PI / 180);
+          //gl.uniformMatrix4fv(uniforms.uModelMatrix, false, modelMatrix);
+          initTexture(gl, uniforms.uSampler);
+
+          // render
+          gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+          gl.drawArrays(gl.TRIANGLE_STRIP, 0, n);
+          requestAnimationFrame(animate);
+        };
+      };
+
+      function initBuffers (gl, attributes, uniforms) {
+        var positions = new Float32Array([
+          -0.5,  0.5,
+          -0.5, -0.5,
+           0.5,  0.5,
+           0.5, -0.5
+        ]);
+        var tex = new Float32Array([
+          0.0, 1.0,
+          0.0, 0.0,
+          1.0, 1.0,
+          1.0, 0.0
+        ]);
+
+        initBuffer(gl, positions, 2, attributes.aPosition);
+        initBuffer(gl, tex, 2, attributes.aTexCoord);
+
+        var modelMatrix = mat4.create();
+        gl.uniformMatrix4fv(uniforms.uModelMatrix, false, modelMatrix);
         // world space -> camera space
         var eye = vec3.fromValues(0, 0, 3);
         var lookAt = vec3.fromValues(0, 0, 0);
         var up = vec3.fromValues(0, 1, 0);
         var viewMatrix = mat4.create();
-        mat4.lookAt(viewMatrix, eye, lookAt, up);
+        //mat4.lookAt(viewMatrix, eye, lookAt, up);
         gl.uniformMatrix4fv(uniforms.uViewMatrix, false, viewMatrix);
 
         // camera space -> screen
         var projMatrix = mat4.create();
-        mat4.perspective(projMatrix, 30 * Math.PI / 180,
-                         canvas.width / canvas.height, 1, 10);
+        //mat4.perspective(projMatrix, 30 * Math.PI / 180,
+        //                 canvas.width / canvas.height, 1, 10);
         gl.uniformMatrix4fv(uniforms.uProjMatrix, false, projMatrix);
 
-        requestAnimationFrame(createAnimate(gl, uniforms.uModelMatrix, n));
-      });
-
-      function createAnimate (gl, modelUniform, n) {
-        var modelMatrix = mat4.create();
-        return function animate () {
-          // update
-          mat4.rotateY(modelMatrix, modelMatrix, Math.PI / 180);
-          gl.uniformMatrix4fv(modelUniform, false, modelMatrix);
-          // render
-          gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-          gl.drawArrays(gl.TRIANGLES, 0, n);
-          requestAnimationFrame(animate);
-        };
-      };
-
-      function initBuffers (gl, attributes) {
-        var positions = new Float32Array([
-           0.0,  0.5,  0.0,
-          -0.5, -0.5,  0.0,
-           0.5, -0.5,  0.0,
-        ]);
-        var colors = new Float32Array([
-          1.0, 0.0, 0.0,
-          1.0, 1.0, 0.0,
-          1.0, 0.0, 1.0,
-        ]);
-
-        initBuffer(gl, positions, 3, attributes.aPosition);
-        initBuffer(gl, colors, 3, attributes.aColor);
-
-        return 3;
+        return 4;
       };
     </script>
   </body>
