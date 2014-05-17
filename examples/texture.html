@@ -26,17 +26,9 @@
         requestAnimationFrame(createAnimate(gl, uniforms, n));
       });
 
-      function initTexture (gl, uSampler) {
-        var vid = document.querySelector('video');
-        if (vid.paused) {
-          vid.play();
-          console.log("playing");
-        }
-        var texture = gl.createTexture();
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
+      function initTexture (gl, texture, uSampler) {
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, texture);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, vid);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
@@ -44,13 +36,25 @@
         gl.uniform1i(uSampler, 0);
       };
 
+      function updateTexture (gl, texture, vid) {
+        // texture is still bound at this point but we should rebind to be safe
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, vid);
+      };
+
       function createAnimate (gl, uniforms, n) {
         var modelMatrix = mat4.create();
+        var texture = gl.createTexture();
+        var vid = document.querySelector('video');
+        if (vid.paused) vid.play();
+        initTexture(gl, texture, uniforms.uSampler);
+
         return function animate () {
           // update
-          //mat4.rotateY(modelMatrix, modelMatrix, Math.PI / 180);
-          //gl.uniformMatrix4fv(uniforms.uModelMatrix, false, modelMatrix);
-          initTexture(gl, uniforms.uSampler);
+          mat4.rotateY(modelMatrix, modelMatrix, Math.PI / 180);
+          gl.uniformMatrix4fv(uniforms.uModelMatrix, false, modelMatrix);
+          updateTexture(gl, texture, vid);
 
           // render
           gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -61,38 +65,32 @@
 
       function initBuffers (gl, attributes, uniforms) {
         var positions = new Float32Array([
-          -0.5,  0.5,
           -0.5, -0.5,
-           0.5,  0.5,
-           0.5, -0.5
+           0.5, -0.5,
+           0.0, 0.5
         ]);
         var tex = new Float32Array([
-          0.0, 1.0,
           0.0, 0.0,
-          1.0, 1.0,
-          1.0, 0.0
+          1.0, 0.0,
+          0.5, 1.0,
         ]);
 
         initBuffer(gl, positions, 2, attributes.aPosition);
         initBuffer(gl, tex, 2, attributes.aTexCoord);
 
-        var modelMatrix = mat4.create();
-        gl.uniformMatrix4fv(uniforms.uModelMatrix, false, modelMatrix);
-        // world space -> camera space
         var eye = vec3.fromValues(0, 0, 3);
         var lookAt = vec3.fromValues(0, 0, 0);
         var up = vec3.fromValues(0, 1, 0);
         var viewMatrix = mat4.create();
-        //mat4.lookAt(viewMatrix, eye, lookAt, up);
+        mat4.lookAt(viewMatrix, eye, lookAt, up);
         gl.uniformMatrix4fv(uniforms.uViewMatrix, false, viewMatrix);
 
-        // camera space -> screen
         var projMatrix = mat4.create();
-        //mat4.perspective(projMatrix, 30 * Math.PI / 180,
-        //                 canvas.width / canvas.height, 1, 10);
+        mat4.perspective(projMatrix, 30 * Math.PI / 180,
+                         canvas.width / canvas.height, 1, 10);
         gl.uniformMatrix4fv(uniforms.uProjMatrix, false, projMatrix);
 
-        return 4;
+        return 3;
       };
     </script>
   </body>
