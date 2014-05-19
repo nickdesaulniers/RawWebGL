@@ -551,12 +551,56 @@ gl.textImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE,
                imgArrayBufferViewVideoOrCanvas);
             </code></pre>
             <p>Can be done during initialization for static images.</p>
-            <p>Must be done during rAF loop for video.</p>
+            <p>Must be done during requestAnimationFrame loop for video.</p>
             <p>Must be done when limited on texture units per draw call.</p>
             <a href="examples/texture.html" target="_blank">Example</a>
           </section>
           <section>
+            <h2>Warning</h2>
+            <p>Uploading textures to the GPU can be expensive.</p>
+            <p>Try to minimize texture swapping between frames.<p>
+          </section>
+          <section>
             <h2>Shading</h2>
+            <h4>Interpolation Techniques</h4>
+            <p>Flat shading - Each polygon has its own color - Disco Ball</p>
+            <p>Gouraud shading - Normals at each vertex - Mach Bands</p>
+            <p>Phong shading - Interpolate normals across surface</p>
+            <img src="flat.jpg"/>
+          </section>
+          <section>
+            <h2>Shading</h2>
+            <h4>Illumination Models</h4>
+            <p>Lambert - The shade is the cosine of the angle between surface normal and light vector.</p>
+            <p>Blinn-Phong - The shade is composed of a specular, diffuse, ambient, and shininess components of the material.</p>
+            <img src="phong.png"/>
+          </section>
+          <section>
+            <h2>Shading</h2>
+            <p>All of this can be done with what you now know.</p>
+            <p>Light directions and material reflective coefficients are buffered.</p>
+            <p>Calculations done in shaders.</p>
+            <p>Exercise left to the reader.</p>
+          </section>
+          <section>
+            <h2>Recommended Reading</h2>
+            <img src="webgl_book.jpg"/><br/>
+            <p><a href="http://fabiensanglard.net/Computer_Graphics_Principles_and_Practices/index.php" target="_blank">More recommendations</a></p>
+          </section>
+          <section>
+            <h2>Inspiration</h2>
+            <p>Tony Parasi</p>
+            <p><a href="http://www.youtube.com/watch?v=me3BviH3nZc" target="_blank">Eric Möller</a></p>
+            <p><a href="https://github.com/gameclosure/webgl-2d" target="_blanks">webgl-2d</a></p>
+          </section>
+          <section>
+            <h2>Thanks</h2>
+            <img src="nick_face.jpg"/>
+            <p>Nick Desaulniers</p>
+            <p><a href="https://twitter.com/LostOracle" target="_bank">@LostOracle</a> on Twitter</p>
+            <p>\n on mozilla.irc.org</p>
+            <p><a href="https://github.com/nickdesaulniers" target="_bank">nickdesaulniers</a> on GitHub</p>
+            <p><a href="http://nickdesaulniers.github.io/" target="_bank">nickdesaulniers.github.io</a>-&gt; blog</p>
           </section>
        </section>
       </div>
