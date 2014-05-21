@@ -5,6 +5,17 @@
   </head>
   <body>
     <canvas id="myCanvas" width="400" height="400"></canvas>
+    <p>
+      <ol>
+        <li>gl.POINTS ((v0), (v1), (v2), (v3), (v4), (v5))</li>
+        <li>gl.LINES ((v0, v1), (v2, v3), (v4, v5))</li>
+        <li>gl.LINE_STRIP ((v0, v1, v2, v3, v4, v5))</li>
+        <li>gl.LINE_LOOP ((v0, v1, v2, v3, v4, v5, v0))</li>
+        <li>gl.TRIANGLES ((v0, v1, v2), (v3, v4, v5))</li>
+        <li>gl.TRIANGLE_STRIP ((v0, v1, v2), (v1, v2, v3), (v2, v3, v4), (v3, v4, v5))</li>
+        <li>gl.TRIANGLE_FAN ((v0, v1, v2), (v0, v3, v4), (v0, v5, v4))</li>
+      </ol>
+    </p>
     <script src="webgl-shader-loader/webGLShaderLoader.js"></script>
     <script src="webgl-shader-loader/webGLUtils.js"></script>
     <script>
