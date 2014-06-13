@@ -533,7 +533,7 @@ gl.uniform1i(uSampler, 0);
             <pre><code class="language-javascript">
 gl.bindTexture(gl.TEXTURE_2D, texture);
 gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
-gl.textImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE,
+gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE,
                imgArrayBufferViewVideoOrCanvas);
             </code></pre>
             <p>Can be done during initialization for static images.</p>
