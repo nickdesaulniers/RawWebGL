@@ -4,8 +4,9 @@
     <meta charset="utf-8"/>
   </head>
   <body>
-    <video src="vid.webm" loop>Looks like you don't support webm.</video>
+    <video id="vid" src="vid.webm" loop>Looks like you don't support webm.</video>
     <canvas id="myCanvas" width="400" height="400"></canvas>
+    <button id="gUM">WebCam</button>
     <script src="webgl-shader-loader/webGLShaderLoader.js"></script>
     <script src="webgl-shader-loader/webGLUtils.js"></script>
     <script src="gl-matrix/dist/gl-matrix.js"></script>
@@ -92,6 +93,17 @@
 
         return 3;
       };
+
+      // gUM
+      var vid = document.getElementById('vid');
+      document.getElementById('gUM').addEventListener('click',
+        (navigator.getUserMedia || navigator.mozGetUserMedia ||
+        navigator.webkitGetUserMedia).bind(navigator, { video: true },
+        function (stream) {
+          vid.src = URL.createObjectURL(stream);
+          vid.onloadedmetadata = vid.play.bind(vid);
+        },
+        console.error.bind(console)));
     </script>
   </body>
 </html>
