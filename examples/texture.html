@@ -88,7 +88,7 @@
 
         var projMatrix = mat4.create();
         mat4.perspective(projMatrix, 30 * Math.PI / 180,
-                         canvas.width / canvas.height, 1, 10);
+                         canvas.clientWidth / canvas.clientHeight, 1, 10);
         gl.uniformMatrix4fv(uniforms.uProjMatrix, false, projMatrix);
 
         return 3;
