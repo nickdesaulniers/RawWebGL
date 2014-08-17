@@ -456,7 +456,7 @@ gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
 gl.vertexAttribPointer(attributes.aPosition, 2, gl.FLOAT, false, 6 * bpe, 0);
 gl.enableVertexAttribArray(attributes.aPosition);
 gl.vertexAttribPointer(attributes.aPointSize, 1, gl.FLOAT, false, 6 * bpe, 2 * bpe);
-gl.enableVertexAttribArray(attributes.aPosition);
+gl.enableVertexAttribArray(attributes.aPointSize);
 gl.vertexAttribPointer(attributes.aColor, 3, gl.FLOAT, false, 6 * bpe, 3 * bpe);
 gl.enableVertexAttribPointer(attributes.aColor);
             </code></pre>
@@ -518,7 +518,7 @@ function animate (time) {
             <h4>Initialization</h4>
             <pre><code class="language-javascript">
 var texture = gl.createTexture();
-gl.activateTexture(gl.TEXTURE0);
+gl.activeTexture(gl.TEXTURE0);
 gl.bindTexture(gl.TEXTURE_2D, texture);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
