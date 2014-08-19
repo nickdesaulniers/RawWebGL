@@ -540,6 +540,7 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 gl.uniform1i(uSampler, 0);
             </code></pre>
+            <p>Multiple textures can use the same texture unit, but shaders can only refer to the latest bound texture.</p>
           </section>
           <section>
             <h2>Textures</h2>
@@ -562,18 +563,18 @@ gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE,
           </section>
           <section>
             <h2>Shading</h2>
-            <h4>Interpolation Techniques</h4>
-            <p>Flat shading - Each polygon has its own color - Disco Ball</p>
-            <p>Gouraud shading - Normals at each vertex - Mach Bands</p>
-            <p>Phong shading - Interpolate normals across surface</p>
-            <img src="flat.jpg"/>
-          </section>
-          <section>
-            <h2>Shading</h2>
             <h4>Illumination Models</h4>
             <p>Lambert - The shade is the cosine of the angle between surface normal and light vector.</p>
             <p>Blinn-Phong - The shade is composed of a specular, diffuse, ambient, and shininess components of the material.</p>
             <img src="phong.png"/>
+          </section>
+          <section>
+            <h2>Shading</h2>
+            <h4>Interpolation Techniques</h4>
+            <p>Flat shading - Each polygon has its own color - Disco Ball</p>
+            <p>Gouraud shading - Colors calculated per vertex - Mach Bands</p>
+            <p>Phong shading - Colors calculated per pixel</p>
+            <img src="flat.jpg"/>
           </section>
           <section>
             <h2>Shading</h2>
