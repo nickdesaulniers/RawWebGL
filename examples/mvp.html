@@ -28,11 +28,11 @@
 
         // local coords -> world space
         var modelMatrix = mat4.create();
-        mat4.rotateZ(modelMatrix, modelMatrix, 45 * Math.PI / 180);
+        mat4.translate(modelMatrix, modelMatrix, vec3.fromValues(0.5, 0.0, 0.0));
         gl.uniformMatrix4fv(uniforms.uModelMatrix, false, modelMatrix);
 
         // world space -> camera space
-        var eye = vec3.fromValues(0, 2, 5);
+        var eye = vec3.fromValues(0, 0, 2.25);
         var lookAt = vec3.fromValues(0, 0, 0);
         var up = vec3.fromValues(0, 1, 0);
         var viewMatrix = mat4.create();
@@ -41,23 +41,33 @@
 
         // camera space -> screen
         var projMatrix = mat4.create();
-        mat4.perspective(projMatrix, 30 * Math.PI / 180,
+        mat4.perspective(projMatrix, 50 * Math.PI / 180,
                          canvas.clientWidth / canvas.clientHeight, 1, 10);
         gl.uniformMatrix4fv(uniforms.uProjMatrix, false, projMatrix);
 
+        gl.drawArrays(gl.TRIANGLES, 0, n);
+
+        mat4.identity(modelMatrix);
+        mat4.translate(modelMatrix, modelMatrix, vec3.fromValues(-0.5, 0.0, 0.0));
+        mat4.scale(modelMatrix, modelMatrix, vec3.fromValues(-1.0, 1.0, 1.0));
+        gl.uniformMatrix4fv(uniforms.uModelMatrix, false, modelMatrix);
         gl.drawArrays(gl.TRIANGLES, 0, n);
       });
 
       function initBuffers (gl, attributes) {
         var positions = new Float32Array([
           // x,    y,   z
-           0.0,  0.5,  0.5,
-          -0.5, -0.5,  0.5,
-           0.5, -0.5,  0.5,
+           0.0,   0.5,  0.5,
+          -0.25, -0.5,  0.5,
+           0.25, -0.5,  0.5,
 
-           0.0,  0.5, -0.5,
-          -0.5, -0.5, -0.5,
-           0.5, -0.5, -0.5
+           0.0,   0.5, 0.0,
+          -0.25, -0.5, 0.0,
+           0.25, -0.5, 0.0,
+
+           0.0,   0.5, -0.5,
+          -0.25, -0.5, -0.5,
+           0.25, -0.5, -0.5
         ]);
         var colors = new Float32Array([
           //r,   g,   b
@@ -67,6 +77,10 @@
 
           1.0, 1.0, 0.0,
           0.0, 1.0, 0.0,
+          0.0, 1.0, 1.0,
+
+          0.0, 0.0, 1.0,
+          1.0, 1.0, 1.0,
           0.0, 1.0, 1.0
         ]);
 
@@ -74,7 +88,7 @@
         initBuffer(gl, positions, 3, attributes.aPosition);
         initBuffer(gl, colors, 3, attributes.aColor);
 
-        return 6; // 6 vertices to be drawn
+        return 9; // 9 vertices to be drawn
       };
     </script>
   </body>
